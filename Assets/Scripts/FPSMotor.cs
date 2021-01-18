@@ -19,13 +19,18 @@ public class FPSMotor : MonoBehaviour
     float _turnAmountThisFrame = 0;
     float _lookAmountThisFrame = 0;
 
-    bool isSkiing = false;
+    public bool isSkiing = false;
     Collider _collider = null;
     [SerializeField] PhysicMaterial frictionlessMaterial = null;
     [SerializeField] PhysicMaterial walkingMaterial = null;
 
     [SerializeField] GroundDetector _groundDetector = null;
-    bool _isGrounded = false;
+    [SerializeField] UIManager uIManager = null;
+    [SerializeField] float energyUsage = 0.1f;
+
+    public bool _isGrounded = false;
+    public float movedDist = 0;
+    public float speed = 0;
     public void Move(Vector3 requestedMovement)
     {
         _movementThisFrame = requestedMovement;
@@ -43,7 +48,11 @@ public class FPSMotor : MonoBehaviour
 
     public void Jump(float jumpForce)
     {
-        _rigidbody.AddForce(Vector3.up * jumpForce);
+        if (uIManager.energy > 1f)
+        {
+            _rigidbody.AddForce(Vector3.up * jumpForce);
+            uIManager.energy -= energyUsage;
+        }
     }
 
     public void Ski()
@@ -80,6 +89,9 @@ public class FPSMotor : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Vector3 posit = _rigidbody.velocity;
+        speed = _rigidbody.velocity.magnitude;
+        Debug.Log(speed);
         ApplyMovement(_movementThisFrame);
         ApplyTurn(_turnAmountThisFrame);
         ApplyLook(_lookAmountThisFrame);
@@ -104,12 +116,10 @@ public class FPSMotor : MonoBehaviour
     {
         if (rotateAmount == 0)
         {
-            Debug.Log(rotateAmount);
             return;
         }
             
         Quaternion newRotation = Quaternion.Euler(0, rotateAmount, 0);
-        Debug.Log(newRotation.eulerAngles.y);
         _rigidbody.MoveRotation(_rigidbody.rotation * newRotation);
         _turnAmountThisFrame = 0;
     }

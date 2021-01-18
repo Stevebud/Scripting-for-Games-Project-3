@@ -12,10 +12,12 @@ public class FPSInput : MonoBehaviour
     public event Action JumpInput = delegate { };
     public event Action SkiInput = delegate { };
 
+    AudioSource _audioSource = null;
+
     // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -66,6 +68,19 @@ public class FPSInput : MonoBehaviour
     }
     void DetectJumpInput()
     {
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (_audioSource.isPlaying == false)
+            {
+                _audioSource.Play();
+            }
+        } else if (Input.GetMouseButtonUp(1))
+        {
+            if (_audioSource.isPlaying)
+            {
+                _audioSource.Stop();
+            }
+        }
         //Right mouse button press
         if(Input.GetMouseButton(1))
         {
