@@ -10,6 +10,7 @@ public class FPSInput : MonoBehaviour
     public event Action<Vector3> MoveInput = delegate { };
     public event Action<Vector3> RotateInput = delegate { };
     public event Action JumpInput = delegate { };
+    public event Action SkiInput = delegate { };
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +24,7 @@ public class FPSInput : MonoBehaviour
         DetectMoveInput();
         DetectRotateInput();
         DetectJumpInput();
+        DetectSkiInput();
     }
 
     void DetectMoveInput()
@@ -64,10 +66,19 @@ public class FPSInput : MonoBehaviour
     }
     void DetectJumpInput()
     {
-        //Spacebar press
-        if(Input.GetKeyDown(KeyCode.Space))
+        //Right mouse button press
+        if(Input.GetMouseButton(1))
         {
             JumpInput?.Invoke();
+        }
+    }
+
+    void DetectSkiInput()
+    {
+        //Spacebar press or lift
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyUp(KeyCode.Space))
+        {
+            SkiInput?.Invoke();
         }
     }
 }

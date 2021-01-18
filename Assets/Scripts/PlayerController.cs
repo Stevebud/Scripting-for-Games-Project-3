@@ -13,6 +13,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _turnSpeed = 6f;
     [SerializeField] float _jumpStrength = 10f;
 
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
     private void Awake()
     {
         _input = GetComponent<FPSInput>();
@@ -24,6 +29,7 @@ public class PlayerController : MonoBehaviour
         _input.MoveInput += OnMove;
         _input.RotateInput += OnRotate;
         _input.JumpInput += OnJump;
+        _input.SkiInput += OnSki;
     }
 
     private void OnDisable()
@@ -31,6 +37,7 @@ public class PlayerController : MonoBehaviour
         _input.MoveInput -= OnMove;
         _input.RotateInput -= OnRotate;
         _input.JumpInput -= OnJump;
+        _input.SkiInput -= OnSki;
     }
 
     private void OnMove(Vector3 movement)
@@ -40,12 +47,17 @@ public class PlayerController : MonoBehaviour
 
     private void OnRotate(Vector3 rotation)
     {
-        _motor.Look(rotation.y * _turnSpeed);
-        _motor.Turn(rotation.x * _turnSpeed);
+        _motor.Look(rotation.x * _turnSpeed);
+        _motor.Turn(rotation.y * _turnSpeed);
     }
 
     private void OnJump()
     {
         _motor.Jump(_jumpStrength);
+    }
+
+    private void OnSki()
+    {
+        _motor.Ski();
     }
 }
